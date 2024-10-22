@@ -41,15 +41,16 @@ public class UserBookService {
     public Book updateBook(Book updatedBook, long id) throws ResponseStatusException {
         Optional<Book> foundBook = bookRepository.findById(id);
 
-        foundBook.map(book -> {
-            book.setTitle(updatedBook.getTitle());
-            book.setAuthor(updatedBook.getAuthor());
-            book.setPages(updatedBook.getPages());
-            book.setYear(updatedBook.getYear());
+        if (foundBook.isPresent()) {
+            Book presentBook = foundBook.get();
+            presentBook.setTitle(updatedBook.getTitle());
+            presentBook.setAuthor(updatedBook.getAuthor());
+            presentBook.setPages(updatedBook.getPages());
+            presentBook.setYear(updatedBook.getYear());
 
-            return bookRepository.save(book);
-        });
-
-        throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+            return presentBook;
+        } else {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND);
+        }
     }
 }

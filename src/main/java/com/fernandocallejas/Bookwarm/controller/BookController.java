@@ -35,8 +35,8 @@ public class BookController {
         return userBookService.getAllBooks();
     } 
 
-    @GetMapping("/UserBooks/{id}")
-    public Book getUserBookById(Long id) {
+    @GetMapping("/UserBooks/id/{id}")
+    public Book getUserBookById(@PathVariable Long id) {
         Optional<Book> book = userBookService.getBookById(id);
 
         if (book.isEmpty()) {
@@ -46,8 +46,8 @@ public class BookController {
         return book.get();
     }
 
-    @GetMapping("/UserBook/{title}")
-    public Book getBookByTitle(String title) {
+    @GetMapping("/UserBook/title/{title:.+}")
+    public Book getBookByTitle(@PathVariable String title) {
         Optional<Book> book = userBookService.getBookByTitle(title);
 
         if (book.isEmpty()) {
@@ -68,7 +68,7 @@ public class BookController {
 
     // @ResponseStatus(HttpStatus.NO_CONTENT)
     @DeleteMapping("/{id}")
-    public String deleteUserBook(long id) {
+    public String deleteUserBook(@PathVariable long id) {
         return userBookService.deleteBookById(id);
     }
 

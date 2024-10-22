@@ -6,6 +6,7 @@ Backend microservice application for book tracking application
 
 - [Prerequisites](#prerequisites)
 - [Installation](#installation)
+- [Database Configuration](#database-configuration)
 - [Packaging the Project](#packaging-the-project)
 - [Running the Application](#running-the-application)
 
@@ -16,6 +17,7 @@ Before you begin, ensure you have the following:
 - A Linux instance (Ubuntu, Fedora, etc.)
 - Java Development Kit (JDK) installed
 - Basic knowledge of using the terminal
+- An Oracle Autonomous Database instance or any Database you wish to use, for this project an Oracle Autonomous Databse hosted in Oracle Cloud infrastructure was used
 
 ## Installation
 
@@ -49,6 +51,14 @@ Check whether maven is installed with the command mvn. The command output should
 ```bash
 mvn
 ```
+
+## Database Configuration
+To connect your application to the Oracle Autonomous Database, you need to configure the database information in the application.yml file.
+Create the file, an example file is provided in application.example.yml
+
+### Add database configuration
+Include database url, username and password, also add path to database Wallet in case you use it with your Oracle Autonomous Database.
+Replace <DB_HOST>, <DB_USERNAME> and <DB_PASSWORD> with your actual database credentials.
 
 ## Packaging the Project
 
