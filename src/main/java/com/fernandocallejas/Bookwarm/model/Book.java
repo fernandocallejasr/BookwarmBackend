@@ -1,9 +1,6 @@
 package com.fernandocallejas.Bookwarm.model;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import javax.persistence.*;
 
 @Entity
 public class Book {
@@ -15,7 +12,9 @@ public class Book {
     private int pages;
     private String author;
 
-    
+    public Book() {
+        
+    }
 
     public Book(String title, int year, int pages, String author) {
         this.title = title;

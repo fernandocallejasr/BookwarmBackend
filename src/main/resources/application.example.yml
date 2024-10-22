@@ -1,0 +1,20 @@
+spring:
+    application:
+        name: bookworm 
+    datasource:
+        url: jdbc:oracle:thin:@//<DB_HOST>:<DB_PORT>/<DB_SERVICE>?TNS_ADMIN=path/to/Wallet
+        username: <DB_USERNAME>
+        password: <DB_PASSWORD>
+    jpa:
+        database: oracle
+        hibernate:
+            naming_strategy: org.hibernate.cfg.ImprovedNamingStrategy
+            show-sql: true
+            ddl-auto: update
+        properties:
+            hibernate:
+                dialect: org.hibernate.dialect.Oracle12cDialect
+
+logging:
+  level:
+    org.springframework: DEBUG
