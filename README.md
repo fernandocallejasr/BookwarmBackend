@@ -1,6 +1,6 @@
 # Bookwarm Backend
 
-This project is a microservice-based backend application designed to run in a Docker container within a Kubernetes cluster. 
+This project is a microservice-based backend application for iOS mobile app [Bookworm](https://github.com/fernandocallejasr/Bookworm) designed to run in a Docker container within a Kubernetes cluster. 
 It connects to an Oracle Autonomous Database to manage user data efficiently. The application exposes RESTful APIs that handle various HTTP requests, including GET, PUT, and DELETE, allowing users to manipulate user Books records seamlessly.
 
 ### Key Features
@@ -22,6 +22,7 @@ It connects to an Oracle Autonomous Database to manage user data efficiently. Th
 - [Creating a Docker Image](#creating-a-docker-image)
 - [Uploading the Docker Image](#uploading-the-docker-image)
 - [Running the Application](#running-the-application)
+- [Deploying to Kubernetes](#deploying-to-kubernetes)
 
 ## Prerequisites
 
@@ -32,6 +33,8 @@ Before you begin, ensure you have the following:
 - Maven installed
 - An Oracle Autonomous Database instance or any Database you wish to use, for this project an Oracle Autonomous Databse hosted in Oracle Cloud infrastructure was used
 - Docker installed
+- Access to an OCI Kubernetes cluster
+- `kubectl` installed and configured to interact with your OCI cluster
 
 ## Installation
 
@@ -63,16 +66,17 @@ sudo yum install -y maven
 
 Check whether maven is installed with the command mvn. The command output should be as shown in the screenshot below
 ```bash
-mvn
+mvn -v
 ```
 
 ## Database Configuration
 To connect your application to the Oracle Autonomous Database, you need to configure the database information in the application.yml file.
-Create the file under src/main/resources, an example file is provided there named application.example.yml
+Create the file under src/main/resources, an example file is provided there, named application.example.yml
 
 ### Add database configuration
 Include database url, username and password, also add path to database Wallet in case you use it with your Oracle Autonomous Database.
 Replace <DB_HOST>, <DB_USERNAME> and <DB_PASSWORD> with your actual database credentials.
+Also add Wallet location if you use a Wallet to connect to Autonomous Database.
 
 ## Packaging the Project
 
@@ -101,7 +105,7 @@ ls target/
 ## Creating a Docker Image
 To create a Docker image for your application, follow these steps:
 ### Step 1: Move the Autonomous Database Wallet folder
-If you are using an Oracle Wallet for database authentication, make sure to move the wallet folder to the target directory.
+If you are using an Oracle Autonomous Database Wallet for database authentication, make sure to move the wallet folder to the target directory.
 
 ### Step 2: Modify the Dockerfile
 Open the Dockerfile in your project directory and update the placeholder <WALLET_FOLDER> to the actual path of your wallet folder in the target directory
@@ -157,5 +161,42 @@ Replace 'your-dockerhub-username' and 'your-image-name' with your actual Docker 
 java -jar target/Bookwarm 0.0.1-SNAPSHOT .jar
 ```
 
+## Deploying to Kubernetes
+Before deploying the Spring Boot application to Kubernetes on OCI, ensure you have the following:
 
+1. **OCI Account**: An active Oracle Cloud Infrastructure account.
+2. **OCI CLI**: Installed and configured.
+3. **Kubernetes Cluster**: A running Kubernetes cluster on OCI. You can create one using [Oracle Container Engine for Kubernetes (OKE)](https://docs.oracle.com/en-us/iaas/Container-Engine/).
+
+4. **kubectl**: Installed and configured to interact with your Kubernetes cluster. Follow the [kubectl installation guide](https://kubernetes.io/docs/tasks/tools/install-kubectl/).
+
+5. **Docker Image**: Ensure you have your Spring Boot application's Docker image pushed to a container registry accessible by your Kubernetes cluster (e.g., OCI Container Registry, Docker Hub).
+
+## Deploying the Spring Boot Application to Kubernetes
+
+Follow these steps to deploy the Spring Boot application to your Kubernetes cluster on OCI:
+
+### Step 1:  Update the Kubernetes Manifest
+Open the manifest file (manifest/bookwarm-service-deployment.yaml) and update the image field with your Docker image name.
+
+### Step 2: Apply the Kubernetes Manifest
+Run the following command to deploy the application:
+```bash
+kubectl apply -f bookwarm-service-deployment.yaml
+```
+
+### Step 3: Verify the Deployment
+Check the status of the deployment and pods:
+```bash
+kubectl get deployments
+kubectl get pods
+```
+
+### Step 4: Access the Application
+If you created a Service of type LoadBalancer, run the following command to get the external IP address
+```bash
+kubectl get services
+```
+
+Access your application using the external IP address and the specified port (e.g., http://<external-ip>:8080).
 

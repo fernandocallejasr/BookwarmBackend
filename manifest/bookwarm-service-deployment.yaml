@@ -1,0 +1,39 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: bookwarm-app
+  labels:
+    app: bookwarm-app
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: bookwarm-app
+  template:
+    metadata:
+      labels:
+        app: bookwarm-app
+    spec:
+      containers:
+      - name: bookwarm-app-container
+        image: <your-docker-image>
+        imagePullPolicy: Always
+        ports:
+        - name: bookwarm-app
+          containerPort: 8080
+          protocol: TCP
+      # imagePullSecrets:  Add secrets if your Docker image is hosted in a private registry (like Docker Hub or a cloud provider's container registry)
+      #   - name: <your-secrets-name>
+      
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: bookwarm-service
+spec:
+  selector:
+    app: bookwarm-app
+  ports:
+    - port: 8081
+      targetPort: 8080
+  type: ClusterIP  # Change to LoadBalancer or NodePort based on your needs
